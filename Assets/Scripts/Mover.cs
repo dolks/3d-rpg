@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -20,7 +18,7 @@ public class Mover : MonoBehaviour
         }
         if (Input.GetMouseButton(0))
         {
-            MoveToCursor();
+            navMeshAgent.isStopped = false;
         }
         UpdateAnimator();
     }
@@ -33,15 +31,8 @@ public class Mover : MonoBehaviour
         GetComponent<Animator>().SetFloat("ForwardSpeed", speed);
     }
 
-    private void MoveToCursor()
+    public void MoveTo(Vector3 point)
     {
-        navMeshAgent.isStopped = false;
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        RaycastHit hit;
-        bool hasHit = Physics.Raycast(ray, out hit);
-        if (hasHit)
-        {
-            navMeshAgent.destination = hit.point;
-        }
+        navMeshAgent.destination = point;
     }
 }
