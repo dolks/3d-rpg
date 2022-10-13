@@ -1,38 +1,41 @@
 using UnityEngine;
 using UnityEngine.AI;
 
-public class Mover : MonoBehaviour
+namespace RPG.Movement
 {
-    [SerializeField] Transform target;
-    NavMeshAgent navMeshAgent;
+    public class Mover : MonoBehaviour
+    {
+        [SerializeField] Transform target;
+        NavMeshAgent navMeshAgent;
 
-    private void Start()
-    {
-        navMeshAgent = GetComponent<NavMeshAgent>();
-    }
-    void Update()
-    {
-        if (Input.GetMouseButtonUp(0))
+        private void Start()
         {
-            navMeshAgent.isStopped = true;
+            navMeshAgent = GetComponent<NavMeshAgent>();
         }
-        if (Input.GetMouseButton(0))
+        void Update()
         {
-            navMeshAgent.isStopped = false;
+            if (Input.GetMouseButtonUp(0))
+            {
+                navMeshAgent.isStopped = true;
+            }
+            if (Input.GetMouseButton(0))
+            {
+                navMeshAgent.isStopped = false;
+            }
+            UpdateAnimator();
         }
-        UpdateAnimator();
-    }
 
-    private void UpdateAnimator()
-    {
-        Vector3 velocity = navMeshAgent.velocity;
-        Vector3 localVelocity = transform.InverseTransformDirection(velocity);
-        float speed = localVelocity.z;
-        GetComponent<Animator>().SetFloat("ForwardSpeed", speed);
-    }
+        private void UpdateAnimator()
+        {
+            Vector3 velocity = navMeshAgent.velocity;
+            Vector3 localVelocity = transform.InverseTransformDirection(velocity);
+            float speed = localVelocity.z;
+            GetComponent<Animator>().SetFloat("ForwardSpeed", speed);
+        }
 
-    public void MoveTo(Vector3 point)
-    {
-        navMeshAgent.destination = point;
+        public void MoveTo(Vector3 point)
+        {
+            navMeshAgent.destination = point;
+        }
     }
 }
