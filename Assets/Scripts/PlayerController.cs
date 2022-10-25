@@ -48,7 +48,6 @@ namespace RPG.Control
             bool hasHit = Physics.Raycast(ray, out hit);
             if (hasHit)
             {
-                GetComponent<Fighter>().Cancel();
                 mover.MoveTo(hit.point);
                 return true;
             }
