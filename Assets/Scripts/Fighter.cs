@@ -10,7 +10,7 @@ namespace RPG.Combat
     public class Fighter : MonoBehaviour, IAction
     {
 
-        [SerializeField] float weaponRange = 2f;
+        [SerializeField] float weaponRange = 4f;
         NavMeshAgent navmeshAgent;
         Transform target;
 
@@ -20,26 +20,31 @@ namespace RPG.Combat
         }
         private void Update()
         {
-            if (target != null && Vector3.Distance(transform.position, target.position) <= weaponRange)
+            if (target == null) return;
+            if (Vector3.Distance(transform.position, target.position) <= weaponRange)
             {
-                navmeshAgent.isStopped = true;
+                GetComponent<Mover>().Cancel();
+                GetComponent<Animator>().SetTrigger("Attack");
             }
             else
             {
-                navmeshAgent.isStopped = false;
                 if (target != null) GetComponent<Mover>().MoveTo(target.position);
             }
         }
         public void Attack(CombatTarget combatTarget)
         {
             GetComponent<ActionScheduler>().StartAction(this);
+            print("setting target to" + combatTarget.transform);
             target = combatTarget.transform;
         }
 
         public void Cancel()
         {
             target = null;
-            navmeshAgent.isStopped = false;
+        }
+
+        void Hit()
+        {
         }
     }
 }

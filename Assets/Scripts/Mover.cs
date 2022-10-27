@@ -14,10 +14,6 @@ namespace RPG.Movement
         }
         void Update()
         {
-            if (Input.GetMouseButtonUp(0))
-            {
-                navMeshAgent.isStopped = true;
-            }
             if (Input.GetMouseButton(0))
             {
                 navMeshAgent.isStopped = false;
@@ -35,7 +31,7 @@ namespace RPG.Movement
 
         public void MoveTo(Vector3 point)
         {
-            GetComponent<ActionScheduler>().StartAction(this);
+            navMeshAgent.isStopped = false;
             navMeshAgent.destination = point;
         }
 
