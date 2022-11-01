@@ -11,8 +11,11 @@ namespace RPG.Combat
     {
 
         [SerializeField] float weaponRange = 4f;
+        [SerializeField] float timeBetweenAttacks = 1f;
+        [SerializeField] float weaponDamage = 25f;
         NavMeshAgent navmeshAgent;
         Transform target;
+        float timeSinceLastAttack = 0;
 
         private void Start()
         {
@@ -20,9 +23,11 @@ namespace RPG.Combat
         }
         private void Update()
         {
+            timeSinceLastAttack += Time.deltaTime;
             if (target == null) return;
-            if (Vector3.Distance(transform.position, target.position) <= weaponRange)
+            if (Vector3.Distance(transform.position, target.position) <= weaponRange && timeSinceLastAttack >= timeBetweenAttacks)
             {
+                timeSinceLastAttack = 0;
                 GetComponent<Mover>().Cancel();
                 GetComponent<Animator>().SetTrigger("Attack");
             }
@@ -34,7 +39,6 @@ namespace RPG.Combat
         public void Attack(CombatTarget combatTarget)
         {
             GetComponent<ActionScheduler>().StartAction(this);
-            print("setting target to" + combatTarget.transform);
             target = combatTarget.transform;
         }
 
@@ -45,6 +49,8 @@ namespace RPG.Combat
 
         void Hit()
         {
+            Health health = target.GetComponent<Health>();
+            if (health != null) health.TakeDamage(weaponDamage);
         }
     }
 }
