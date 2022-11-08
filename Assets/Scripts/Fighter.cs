@@ -25,10 +25,12 @@ namespace RPG.Combat
         {
             timeSinceLastAttack += Time.deltaTime;
             if (target == null) return;
+            if (target.GetComponent<Health>() && target.GetComponent<Health>().Dead) return;
             if (Vector3.Distance(transform.position, target.position) <= weaponRange && timeSinceLastAttack >= timeBetweenAttacks)
             {
                 timeSinceLastAttack = 0;
                 GetComponent<Mover>().Cancel();
+                transform.LookAt(target.position);
                 GetComponent<Animator>().SetTrigger("Attack");
             }
             else
@@ -45,12 +47,17 @@ namespace RPG.Combat
         public void Cancel()
         {
             target = null;
+            GetComponent<Animator>().SetTrigger("CancelAttack");
         }
 
         void Hit()
         {
-            Health health = target.GetComponent<Health>();
-            if (health != null) health.TakeDamage(weaponDamage);
+            if (target)
+            {
+                Health health = target.GetComponent<Health>();
+                if (health.Dead) GetComponent<Animator>().SetTrigger("CancelAttack");
+                if (health != null) health.TakeDamage(weaponDamage);
+            }
         }
     }
 }
